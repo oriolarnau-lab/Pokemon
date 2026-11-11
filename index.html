@@ -33,11 +33,34 @@ input[type=search]{width:100%;margin-top:10px;padding:10px 12px;border-radius:10
 .bar>i{display:block;height:100%;background:var(--ok);width:0;transition:width .25s}
 .sub{color:var(--mut);font-size:13px;margin-top:6px}
 main{padding:12px 12px 0}
-.sets{display:grid;grid-template-columns:1fr;gap:8px}
-.set{background:var(--card);border-radius:14px;padding:12px 14px;text-align:left;width:100%}
-.set .t{display:flex;justify-content:space-between;gap:8px;font-weight:600}
-.set .t span:last-child{color:var(--mut);font-weight:500;font-variant-numeric:tabular-nums}
-.set.done .t span:last-child{color:var(--ok)}
+.hero{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#2b3a67,#5b2a86);color:#fff;border-radius:18px;padding:14px 16px;margin-bottom:6px}
+.hero .ring{--p:0;width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--acc) calc(var(--p)*1%),#ffffff30 0);display:flex;align-items:center;justify-content:center;flex:none}
+.hero .ring b{width:50px;height:50px;border-radius:50%;background:#1b1f4a;display:flex;align-items:center;justify-content:center;font-size:14px}
+.hero .big{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.hero .sm{font-size:13px;opacity:.8}
+.era{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 10px}
+.era h2{margin:0;font-size:17px}
+.era span{color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}
+.sets{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (min-width:600px){.sets{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:900px){.sets{grid-template-columns:repeat(5,1fr)}}
+.set{background:var(--card);border-radius:16px;padding:0;text-align:left;width:100%;overflow:hidden;position:relative;box-shadow:0 1px 0 var(--line)}
+.set:active{transform:scale(.98)}
+.cover{position:relative;height:148px;overflow:hidden;background:linear-gradient(160deg,var(--g1),var(--g2))}
+.cover.me{--g1:#6d28d9;--g2:#1e3a8a}
+.cover.sv{--g1:#e0561f;--g2:#7a1fa2}
+.cover img{position:absolute;bottom:-22px;width:44%;aspect-ratio:245/342;object-fit:cover;border-radius:6px;box-shadow:0 4px 12px #0007;background:#0003}
+.cover img.l{left:5%;transform:rotate(-10deg);z-index:1}
+.cover img.r{right:5%;transform:rotate(10deg);z-index:1}
+.cover img.m{left:50%;transform:translateX(-50%);width:50%;z-index:2;bottom:-12px}
+.cover .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:#fff5;letter-spacing:.05em}
+.set .sb{padding:10px 12px 12px}
+.set .nm{font-weight:700;font-size:14px;line-height:1.2;min-height:34px;display:flex;align-items:center}
+.set .ct{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:4px;font-variant-numeric:tabular-nums}
+.set .bar{margin-top:6px}
+.set.done .bar>i{background:var(--acc)}
+.badge{position:absolute;top:8px;right:8px;z-index:3;background:var(--acc);color:#14161c;font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px}
+.pct{position:absolute;top:8px;left:8px;z-index:3;background:#000a;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px}
 .filters{display:flex;gap:8px;margin:2px 0 12px;overflow-x:auto}
 .filters button{white-space:nowrap}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -45,8 +68,9 @@ main{padding:12px 12px 0}
 @media (min-width:900px){.grid{grid-template-columns:repeat(7,1fr)}}
 .c{position:relative;background:var(--card);border-radius:10px;overflow:hidden;padding:0;text-align:left;display:block;width:100%}
 .c .im{aspect-ratio:245/342;background:var(--card2);display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:var(--mut);padding:6px;position:relative}
-.c img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.55);transition:filter .2s}
-.c.own img{filter:none}
+.c img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.c{transition:box-shadow .15s}
+.c.own{box-shadow:0 0 0 3px var(--ok)}
 .c .m{padding:5px 7px 6px;font-size:12px;line-height:1.2}
 .c .m b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .c .m span{color:var(--mut)}
@@ -112,6 +136,27 @@ function esc(s){ return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;"
 function cnt(s){ let n=0; s.cards.forEach(c=>{ if(owned[cid(s,c)]) n++; }); return n; }
 function hires(u){ return /images\.pokemontcg\.io/.test(u) ? u.replace(/\.png$/,"_hires.png") : u; }
 
+
+const ERAS = [
+  {k:"me", t:"Era Mega Evolution", sets:["Delta Reign","Pitch Black","Chaos Rising","Perfect Order","Ascended Heroes","Phantasmal Flames","Mega Evolution","Mega Evolution Black Star Promo","30th Celebration"]},
+  {k:"sv", t:"Era Scarlet & Violet", sets:["White Flare","Black Bolt","Destined Rivals","Journey Together","Prismatic Evolutions","Surging Sparks","Stellar Crown","Shrouded Fable","Twilight Masquerade","Temporal Forces","Paldean Fates","Paradox Rift","151","Obsidian Flames","Paldea Evolved","Scarlet & Violet"]}
+];
+function setTile(i, era){
+  const s = DATA[i], k = cnt(s), T = s.cards.length, done = k===T && T>0;
+  const withImg = s.cards.filter(c=>c.img);
+  let cover;
+  if (withImg.length) {
+    const pick = [withImg[0], withImg[Math.floor(withImg.length/2)], withImg[withImg.length-1]];
+    const im = (c,cl)=>'<img class="'+cl+'" loading="lazy" decoding="async" src="'+esc(c.img)+'" alt="" onerror="this.remove()">';
+    cover = im(pick[0],"l")+im(pick[1],"r")+im(pick[2],"m");
+  } else {
+    cover = '<div class="ph">'+esc(s.set.split(" ").map(w=>w[0]).join("").slice(0,3))+'</div>';
+  }
+  return '<button class="set'+(done?' done':'')+'" data-i="'+i+'"><div class="cover '+era+'">'+cover+'</div>' +
+    (done?'<span class="badge">COMPLETA</span>':'<span class="pct">'+Math.round(100*k/T)+' %</span>') +
+    '<div class="sb"><div class="nm">'+esc(s.set)+'</div><div class="ct"><span>'+k+' / '+T+'</span><span>'+(T-k)+' per tenir</span></div><div class="bar"><i style="width:'+(100*k/T)+'%"></i></div></div></button>';
+}
+
 let view = { set: null, filter: "all" };
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 
@@ -126,10 +171,14 @@ function render(){
     $("title").textContent = "Col·lecció IR / SIR";
     let n=0,t=0; DATA.forEach(s=>{ n+=cnt(s); t+=s.cards.length; });
     progress(n,t);
-    main.innerHTML = '<div class="sets">' + DATA.map((s,i)=>{
-      const k=cnt(s), T=s.cards.length;
-      return '<button class="set'+(k===T?' done':'')+'" data-i="'+i+'"><div class="t"><span>'+esc(s.set)+'</span><span>'+k+' / '+T+'</span></div><div class="bar"><i style="width:'+(100*k/T)+'%"></i></div></button>';
-    }).join("") + '</div>';
+    const pct = t?Math.round(100*n/t):0;
+    let h = '<div class="hero"><div class="ring" style="--p:'+pct+'"><b>'+pct+' %</b></div><div><div class="big">'+n+' / '+t+'</div><div class="sm">cartes de la col·lecció · '+DATA.filter(s=>cnt(s)===s.cards.length).length+' de '+DATA.length+' expansions completes</div></div></div>';
+    ERAS.forEach(e=>{
+      const sets = e.sets.map(nm=>DATA.findIndex(s=>s.set===nm)).filter(i=>i>=0);
+      let k=0,T=0; sets.forEach(i=>{ k+=cnt(DATA[i]); T+=DATA[i].cards.length; });
+      h += '<div class="era"><h2>'+esc(e.t)+'</h2><span>'+k+' / '+T+'</span></div><div class="sets">' + sets.map(i=>setTile(i,e.k)).join("") + '</div>';
+    });
+    main.innerHTML = h;
     return;
   }
   const s = DATA[view.set];
